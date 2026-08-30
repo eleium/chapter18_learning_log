@@ -337,3 +337,131 @@ python manage.py migrate
 # 小写 + 复数 = 查询集（多个实例）
 # 小写 + 单数 = 字段名 或 单个实例的变量名
 # 小写 + _set = 反向关系管理器（从“一”查“多”）
+
+
+#继续，匹配url  URL 的全称是：
+
+# Uniform Resource Locator   统一资源定位符（也叫“网址”或“网页地址”）
+#用户要访问一个网址，需要输入或点击一个网址的url,比如 http://127.0.0.1:8000/admin/auth/user
+
+#这个网址是由django服务器提供，所以django读取该url,读到http://127.0.0.1:8000/admin时，那这个admin跟urls.py中的
+
+
+
+# 用户访问: http://127.0.0.1:8000/admin/auth/user/
+# 步骤 1: Django 拿到路径 → /admin/auth/user/
+# 步骤 2: 在项目根路由 (project/urls.py) 中匹配
+#         └── path('admin/', admin.site.urls)  ✅ 匹配成功！
+# 步骤 3: Django 截断 'admin/'，剩下 'auth/user/'
+# 步骤 4: 将 'auth/user/' 交给 admin.site.urls 继续匹配
+# 步骤 5: admin.site.urls 内部有路由规则：
+#         └── path('auth/user/', ...)  ✅ 匹配成功！
+# 步骤 6: 执行对应的视图函数，返回管理后台的“用户列表”页面
+
+from django.urls import path
+from . import views
+
+app_name='learning_logs'
+urlpatterns=[
+    #主页
+    path('',views.index,name='index'),
+    ]
+# 这是在learning_logs app中新建的urls.py.
+# “实际的URL模式是对path()函数的调用。
+# 第一个参数是一个字符串，帮助Django正确地路由请求。
+# 收到请求的URL后，Django将请求路由给一个视图，并搜索所有URL模式，以找到与当前请求匹配的。
+# Django忽略项目的基础URL，因此空字符串""与基础URL匹配。其他URL都与这个模式不匹配。
+# 如果请求的URL与任何既有的URL模式都不匹配，Django将返回一个错误页面。”
+
+# 以上是书中原文。没看懂。
+
+# URL模式是啥?跟平常所说的URL有啥不同？一串字符组成的一个网址：https://github.com/eleium/learning_log？
+# URL 模式 = 一个匹配规则，而不是一个完整的网址。
+# URL 模式（你在 urls.py 里写的）	'admin/'	匹配规则，用来判断这个 URL 是否属于某个功能
+
+
+# Django去哪里搜索所有URL模式？去ll_project和app下的urls.py中找？
+# Django 按顺序搜索两个地方：
+# 项目根路由：ll_project/urls.py（这是入口）
+# 应用子路由：learning_logs/urls.py（被 include() 引入）
+
+# ”忽略项目的基础URL，就是忽略http://127.0.0.1:8000,也即是空字符串。"，
+# “忽略项目的基础 URL”是什么意思？
+# 先看一个完整 URL
+# http://127.0.0.1:8000/admin/auth/user/
+#         └─────────────┘ └──────────────┘
+#            基础 URL         路径部分
+#       （协议+主机+端口）   （Django 关心的部分）
+# Django 只管“路径部分”，也就是斜杠后面的那一段。
+
+# 书里说的“基础 URL”指的是：
+# http://127.0.0.1:8000（或者你的域名）
+# Django 自动忽略它，只拿 /admin/auth/user/ 去跟 urls.py 里的模式比对。
+# 所以：
+# urls.py 里的模式	它匹配的 URL 示例
+# ''（空字符串）	http://127.0.0.1:8000/
+# 'admin/'	http://127.0.0.1:8000/admin/
+# 'topics/'	http://127.0.0.1:8000/topics/
+# 空字符串 '' 匹配的就是“根路径”（基础 URL 后面没有任何东西）。
+
+
+# 如果是非空的字符串，就找非空字符串对应的URL? path("admin/", admin.site.urls)就是非空字符串？对应的URL是”admin/"?
+# 对！
+# path('admin/', admin.site.urls) 中的 'admin/' 是一个非空 URL 模式，它匹配的是：
+# ✅ http://127.0.0.1:8000/admin/
+# ✅ http://127.0.0.1:8000/admin/login/
+# ✅ http://127.0.0.1:8000/admin/auth/user/
+
+# ❌ http://127.0.0.1:8000/（根路径不匹配）
+# ❌ http://127.0.0.1:8000/topics/（不匹配）
+# 模式 'admin/' 表示“路径以 admin/ 开头”，至于后面还有没有东西，交给下一层路由去处理。
+
+# 如果请求的URL与任何既有的URL模式都不匹配，Django将返回一个错误页面。怎么理解？
+# 是在urls.py(ll_project中的和learning_logs中的）都没有URL匹配？
+#对。用户访问 http://127.0.0.1:8000/abcdefg/
+
+# 检查顺序	模式	匹配？
+# 1	'admin/'	❌ 不匹配（在ll_project的 urls.py中是全局设定没有找到abcdefg/）
+# 2	''（include 到 learning_logs）	❌ '' 只匹配根路径 /，不匹配 /abcdefg/（在具体的app 的 urls.py中也没有找到abcdefg/。）
+# 全部失败 → Django 返回 404。
+
+# 一个完整的URL可以拆分成几个URL？不然怎么会出现基础URL？
+# 标准拆分：
+# http://127.0.0.1:8000/admin/auth/user/?page=2#section1
+# └─┬─┘ └─────┬─────┘ └┬┘ └──────┬──────┘ └──┬──┘ └──┬───┘
+#   协议       主机      端口     路径        参数    锚点
+
+# 部分	例子	                               Django 是否关心？
+# 协议	http:// 或 https://	                   ❌ 不关心（由 Web 服务器处理）
+# 主机	127.0.0.1 或 example.com	           ❌ 不关心（由 Web 服务器处理）
+# 端口	:8000	                               ❌ 不关心（由 Web 服务器处理）
+# 路径	/admin/auth/user/	                   ✅ 这是 Django 路由系统处理的部分
+# 参数	?page=2	                               ✅ 由视图函数通过 request.GET 获取
+# 锚点	#section1	                           ❌ 浏览器内部使用，不发送到服务器
+
+
+
+#制作视图view:
+from django.shortcuts import render
+
+def index(request):
+    return render(request,'learning_logs/index.html')
+# render() 的作用是：把“模板（HTML 文件）”和“数据（字典）”合并，生成一个完整的 HTML 页面，然后打包成 HTTP 响应返回给浏览器。
+
+#request 不是你自己定义的，而是 Django 在接收到用户请求时“自动创建”的，然后作为参数传入你的视图函数。
+# 1. 用户在浏览器输入 URL: http://127.0.0.1:8000/
+#                         ↓
+# 2. 浏览器发送 HTTP 请求到 Django 服务器
+#                         ↓
+# 3. Django 服务器接收到请求
+#                         ↓
+# 4. Django 自动创建 HttpRequest 对象（即 request）
+#    （这个对象里包含：请求方法 GET/POST、用户 IP、Cookie、表单数据等）
+#                         ↓
+# 5. Django 根据 URL 路由，找到对应的视图函数 index
+#                         ↓
+# 6. Django 调用 index(request)，把 request 传进去
+#                         ↓
+# 7. 视图函数内部用 render() 处理，返回 HttpResponse
+#                         ↓
+# 8. Django 把响应返回给浏览器

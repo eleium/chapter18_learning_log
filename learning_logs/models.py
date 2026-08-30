@@ -61,7 +61,7 @@ class Entry(models.Model):
         verbose_name_plural = "entries"
         # verbose = 啰嗦的、详细的、冗长的。    verbose_name = “人性化、可读的名字”。
         # plural = 复数（语言学术语）。    verbose_name_plural = “复数的、人性化的名字”。
-        #在后台菜单里，请用 entries 这个正确的英文复数来显示它，别用 Django 默认生成的 Entrys。
+        # 在后台菜单里，请用 entries 这个正确的英文复数来显示它，别用 Django 默认生成的 Entrys。
 
     def __str__(self):
         # 返回一个表示条目的简单字符串：
