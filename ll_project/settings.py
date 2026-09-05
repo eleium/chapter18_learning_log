@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-ubc^_0v^9k%4tl8dqcrmk4=y#6&4eb6fx2=4*#xne!dmdznj6i"
+SECRET_KEY = "django-insecure-ubc^_0v^9k%4tl8dqcrmk4=y#6&4eb6fx2=4*#xne!dding6i"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # 我的应用程序
     "learning_logs",
+    "user_accounts",
     # Django 默认的（自带的）添加进来的应用程序
     "django.contrib.admin",
     "django.contrib.auth",
@@ -128,3 +129,7 @@ MAILERS = {
         "BACKEND": "django.core.mail.backends.console.EmailBackend",
     },
 }
+
+#我的设置：
+LOGIN_REDIRECT_URL="learning_logs:index"
+LOGOUT_REDIRECT_URL= 'learning_logs:index'

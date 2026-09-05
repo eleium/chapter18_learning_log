@@ -21,5 +21,7 @@ from django.urls import path,include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('',include('learning_logs.urls'))
+    path('',include('learning_logs.urls')),
+    #include() 的意思是：“当前这个路由，不要在这里处理，请交给另一个 urls.py 去处理。”
+    path('user_accounts/',include('user_accounts.urls')),
 ]

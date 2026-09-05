@@ -1,0 +1,12 @@
+{% extends "learning_logs/base.html" %}
+{% block content %}
+    {% if form.errors %}
+        <p>Your username and password didn't match.Please try again.</p>
+    {% endif %}
+    <form action="{% url 'user_accounts:login' %}" method='post'>
+        {% csrf_token %}
+        {{ form.as_div }}
+        <button name='submit'>Log in</button>
+        #submit: 提交的意思，相当于一个提交按钮。
+    </form>
+{% endblock content %}

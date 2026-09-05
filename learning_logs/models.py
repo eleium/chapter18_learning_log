@@ -27,10 +27,10 @@ class Topic(models.Model):
         return self.text
 
 
-# opic = 一个文件夹（主题）。
+# topic = 一个文件夹（主题）。
 # Entry = 文件夹里的一张张具体笔记纸（条目）。
 # 你可以为“Python”这个主题创建很多个 Entry，比如“今天学了函数”、“明天学了类”。
-# opic 是“大分类”，Entry 是“大分类下面的一条具体笔记”。
+# topic 是“大分类”，Entry 是“大分类下面的一条具体笔记”。
 # 如果你把 Entry 连接到你的 Topic（通过外键），你就能在 Django 里把这些具体的笔记按照你的学习主题整理得井井有条
 
 
@@ -61,7 +61,7 @@ class Entry(models.Model):
         verbose_name_plural = "entries"
         # verbose = 啰嗦的、详细的、冗长的。    verbose_name = “人性化、可读的名字”。
         # plural = 复数（语言学术语）。    verbose_name_plural = “复数的、人性化的名字”。
-        # 在后台菜单里，请用 entries 这个正确的英文复数来显示它，别用 Django 默认生成的 Entrys。
+        # 在后台菜单里，请用 entries 这个正确的英文复数来显示它，别用 Django 默认生成的 "Entrys"。
 
     def __str__(self):
         # 返回一个表示条目的简单字符串：
