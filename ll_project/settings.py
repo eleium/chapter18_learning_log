@@ -31,9 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # 我的应用程序
+    # 我的应用程序,创建的app:
     "learning_logs",
     "user_accounts",
+
+    #第三方应用程序：
+    'django_bootstrap5',
+
     # Django 默认的（自带的）添加进来的应用程序
     "django.contrib.admin",
     "django.contrib.auth",
@@ -130,6 +134,7 @@ MAILERS = {
     },
 }
 
-#我的设置：
-LOGIN_REDIRECT_URL="learning_logs:index"
-LOGOUT_REDIRECT_URL= 'learning_logs:index'
+# 我的设置：
+LOGIN_REDIRECT_URL = "learning_logs:index"
+LOGOUT_REDIRECT_URL = "learning_logs:index"
+LOGIN_URL = "user_accounts:login"

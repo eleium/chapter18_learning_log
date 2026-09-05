@@ -1,4 +1,4 @@
-{% extends "learning_logs.html" %}
+{% extends "learning_logs/base.html" %}
 {% block content %}
     <form action="{% url 'user_accounts:register' %}" method='post'>
         {% csrf_token %}

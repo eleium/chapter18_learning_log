@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 # Create your models here.
 
@@ -17,6 +19,7 @@ class Topic(models.Model):
     # models.DateTimeField：这是一个日期时间字段，用来存放日期和时间。
     # auto_now_add=True：这是一个“自动保存时间”的魔法参数。
     # 当你创建这个主题时，Django 会自动把这个时刻记下来，不需要你手动输入，而且以后更新它也不会改变
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         # 返回模型的字符串表示：

@@ -1,0 +1,27 @@
+<p>
+    <a href="{% url 'learning_logs:index' %}">Learning Log</a> -
+    <a href="{% url 'learning_logs:topics' %}">Topics</a> -
+    {% if user.is_authenticated %}
+    Hello,{{ user.username}}.
+    {% else %}
+    <a href ="{% url 'user_accounts:register' %}">Register</a>
+    <a href="{% url 'user_accounts:login' %}">Log in</a>
+    {% endif %}
+</p>
+
+{% block content %}{% endblock content %}
+
+{% if user.is_authenticated %}
+  <hr />
+  <form action="{% url 'user_accounts:logout' %}" method='post'>
+    {% csrf_token %}
+    {# {% csrf_token %} 是 Django 模板里一个安全标记，它是一串随机生成的字符串。它的作用是防止跨站请求伪造攻击。#}
+    {# 注意 注释文字的格式与python不同 #}
+    <button name='submit'>Log out</button>
+  </form>
+  {% endif %}
+
+
+
+  {# 这个base.html文件，只是用于没有调用外面的插件（第三方程序）的情况下写的，让网页能跑起来的临时，原始的模板。
+  应用django.bootstrap5这个第三方程序后，就可以使用其中的模板，制作漂亮的网页了。#}
