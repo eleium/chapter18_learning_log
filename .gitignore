@@ -55,3 +55,7 @@ poetry.lock
 
 # node_modules (if any)
 node_modules/
+
+
+# 这个文件夹是运行 collectstatic 时生成的，不需要上传
+/staticfiles/     

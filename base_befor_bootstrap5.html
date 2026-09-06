@@ -25,3 +25,82 @@
 
   {# 这个base.html文件，只是用于没有调用外面的插件（第三方程序）的情况下写的，让网页能跑起来的临时，原始的模板。
   应用django.bootstrap5这个第三方程序后，就可以使用其中的模板，制作漂亮的网页了。#}
+
+  
+<!--以下内容是trae改动到本地static的。-->
+
+
+  <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <title>Learning Log</title>
+    <!-- 使用本地 Bootstrap 文件，绕过 CDN 加载问题 -->
+    {% load static %}
+    <link href="{% static 'learning_logs/bootstrap/bootstrap.min.css' %}"
+          rel="stylesheet">
+    <script src="{% static 'learning_logs/bootstrap/bootstrap.bundle.min.js' %}"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'learning_logs:index' %}">Learning Log</a>
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse"
+                aria-expanded="false"
+                aria-label="Toggler navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'learning_logs:topics' %}">Topics</a>
+            </li>
+          </ul>
+          <!--定义导航栏左侧链接的代码到此结束-->
+          <!--与账户相关的链接-->
+          <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <span class="navbar-text me-2">Hello,{{ user.username }}.</span>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url "user_accounts:register" %}">Register</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url "user_accounts:login" %}">Log in</a>
+              </li>
+            {% endif %}
+          </ul>
+          <!--与账户相关的链接到此结束-->
+          {% if user.is_authenticated %}
+            <form action="{% url 'user_accounts:logout' %}" method='post'>
+              {% csrf_token %}
+              <button name='submit' class="btn btn-outline-secondary btn-sm">Log out</button>
+            </form>
+          {% endif %}
+        </div>
+        <!--定义导航栏可折叠部分的代码到此结束-->
+      </div>
+      <!--定义导航栏容器的代码到此结束-->
+    </nav>
+    <!--定义导航栏的代码到此结束-->
+    <main class ="container">
+      <div class="pb-2 mb-2 border-bottom">
+        {% block page_header %}{% endblock page_header %}
+      </div>
+      <div>
+        {% block content %}{% endblock content%}
+      </div>
+    </main>
+    <main class="container my-3">
+      {% block content %}
+      {% endblock content %}
+    </main>
+  </body>
+</html>

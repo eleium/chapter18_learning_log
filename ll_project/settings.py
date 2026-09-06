@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-ubc^_0v^9k%4tl8dqcrmk4=y#6&4eb6fx2=4*#xne!dding6i"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['eleium.pythonanywhere.com','localhost','127.0.0.1']
 
 
 # Application definition
@@ -34,8 +34,7 @@ INSTALLED_APPS = [
     # 我的应用程序,创建的app:
     "learning_logs",
     "user_accounts",
-
-    #第三方应用程序：
+    # 第三方应用程序：
     'django_bootstrap5',
 
     # Django 默认的（自带的）添加进来的应用程序
@@ -138,3 +137,8 @@ MAILERS = {
 LOGIN_REDIRECT_URL = "learning_logs:index"
 LOGOUT_REDIRECT_URL = "learning_logs:index"
 LOGIN_URL = "user_accounts:login"
+
+
+# 在 settings.py 文件末尾附近添加
+# 确保 BASE_DIR 已经在文件开头定义过了
+STATIC_ROOT = BASE_DIR / 'staticfiles'
