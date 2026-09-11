@@ -201,6 +201,8 @@ python manage.py migrate
 # 把Entry 的模型，放入models.py中
 # 每次修改完Entry,就可以 ： (1),创建可迁徙文件： python manage.py makemigrations    (2),迁徙文件： python manage.py migrate
 
+#创建好Entry模型后，要在admin.py 中注册，否则django不认识： form .models.py import Entry   admin.site.register(Entry)
+
 # 新的子文件entry创建好了之后，就可以在管理网站中添加这个子文件Entry的text了。 text框内这次没有文字限制了。max_length=200.
 
 # 完成上面的添加Entry之后，可以进入django的shell:
@@ -283,13 +285,13 @@ python manage.py migrate
 # 改“字段类型、长度、名字、是否为空、默认值” → 必须迁移
 # 改“方法、排序、显示名” → 不用迁移
 
-# 概念	            对应 Django 术语	现实类比
-# Topic 类	        模型（Model）	   “项目文件夹” 这个概念（比如“客户档案”）
-# Topic 实例	    一条记录（Row）	   一个具体的项目文件夹，比如标着“Python 学习”的那个
-# Entry 类	        模型（Model）	   “文件夹里的单页文件” 这个概念（比如“会议纪要”）
-# Entry 实例	    一条记录（Row）    	一张具体的纸，比如写着“2025-03-12 学习了 Django 迁移”
-# ForeignKey	    外键字段	        纸右上角写的 “所属文件夹编号”（比如“归属：Python 学习”文件夹）
-# CASCADE	        级联删除	        如果“Python 学习”这个文件夹被扔了，里面所有纸一起碎掉
+# 概念	            对应 Django 术语	        现实类比
+# Topic 类	        模型（Model）	           “项目文件夹” 这个概念（比如“客户档案”）
+# Topic 实例	      一条记录（Row）	          一个具体的项目文件夹，比如标着“Python 学习”的那个
+# Entry 类	        模型（Model）	            “文件夹里的单页文件” 这个概念（比如“会议纪要”）
+# Entry 实例	      一条记录（Row）          	一张具体的纸，比如写着“2025-03-12 学习了 Django 迁移”
+# ForeignKey	      外键字段	                纸右上角写的 “所属文件夹编号”（比如“归属：Python 学习”文件夹）
+# CASCADE	          级联删除	                如果“Python 学习”这个文件夹被扔了，里面所有纸一起碎掉
 
 # 一个文件袋里放了好几张纸。文件袋的标签是Topic，可以是python /chess/rock_climbing。
 # 里面的纸张是Entry,每个Entry是一张纸，对应着Topic.可以多张纸（多个Entry)都写的是python的相关内容。
@@ -308,10 +310,10 @@ python manage.py migrate
 # topic（小写）= 你手里那张业务单上写的“所属排队号”（指向那张标签）   字段名，是 Entry 里的一列，存的是 Topic 的 id
 
 # 代码	                                         类比
-# class Topic(models.Model):	                 设计“排队号”这种概念
+# class Topic(models.Model):	                   设计“排队号”这种概念
 # topic = models.ForeignKey(Topic, ...)	         在业务单上画一个“所属排队号”的填空栏
-# t = Topic.objects.get(id=1)	                 实际拿到一个排队号（比如“A001”）
-# entry.topic	                                 查看这张业务单填的是哪个排队号
+# t = Topic.objects.get(id=1)	                   实际拿到一个排队号（比如“A001”）
+# entry.topic	                                   查看这张业务单填的是哪个排队号
 
 # 外键字段名默认用来生成反向关系（entry_set）啥意思？
 # 这个问题问得非常精准，这是理解 Django ORM 的核心。我们直接拆解。
@@ -322,14 +324,14 @@ python manage.py migrate
 # Django 会自动在另一个模型（Topic）上创建一个“反向管理器”，
 # 默认的名字就是“外键所在模型的小写名 + _set”。
 
-# 你看到的词	            它在代码里的角色	                    它是什么类型	举例
-# Topic（大写 T，单数）	    模型类（Model Class）	                类（Class）  	class Topic(models.Model):
-# topics（小写 t，复数）	查询集（QuerySet）或 变量名	            多个实例的集合	topics = Topic.objects.all()
+# 你看到的词	              它在代码里的角色	                      它是什么类型	举例
+# Topic（大写 T，单数）	    模型类（Model Class）	                  类（Class）  	class Topic(models.Model):
+# topics（小写 t，复数）	  查询集（QuerySet）或 变量名	            多个实例的集合	topics = Topic.objects.all()
 # topic（小写 t，单数）	    字段名（Field Name)或单个实例的变量名	字段/实例对象	topic = models.ForeignKey(Topic) 或 topic = Topic.objects.get(id=1)
-# Entry（大写 E，单数）	    模型类（Model Class）	                类（Class）	    class Entry(models.Model):
-# entries（小写 e，复数）	查询集（QuerySet） 或 变量名	        多个实例的集合	entries = Entry.objects.all()
-# entry（小写 e，单数）	    单个实例的变量名	                    实例对象	    entry = Entry.objects.get(id=1)
-# entry_set（小写，加下划线）	反向关系管理器（Related Manager）	描述符（Descriptor）	topic.entry_set.all()
+# Entry（大写 E，单数）	    模型类（Model Class）	                  类（Class）	    class Entry(models.Model):
+# entries（小写 e，复数）	  查询集（QuerySet） 或 变量名	          多个实例的集合	entries = Entry.objects.all()
+# entry（小写 e，单数）	    单个实例的变量名	                      实例对象	    entry = Entry.objects.get(id=1)
+# entry_set（小写，加下划线）	反向关系管理器（Related Manager）	    描述符（Descriptor）	topic.entry_set.all()
 
 # 核心规律（记住这一条，永不混淆）
 # 大写开头 = 类（模型）
@@ -378,7 +380,7 @@ urlpatterns = [
 # URL 模式（你在 urls.py 里写的）	'admin/'	匹配规则，用来判断这个 URL 是否属于某个功能
 
 
-# Django去哪里搜索所有URL模式？去ll_project和app下的urls.py中找？
+# Django去哪里搜索所有URL模式？去ll_project和app下的urls.py中找
 # Django 按顺序搜索两个地方：
 # 项目根路由：ll_project/urls.py（这是入口）
 # 应用子路由：learning_logs/urls.py（被 include() 引入）
@@ -429,13 +431,13 @@ urlpatterns = [
 # └─┬─┘ └─────┬─────┘ └┬┘ └──────┬──────┘ └──┬──┘ └──┬───┘
 #   协议       主机      端口     路径        参数    锚点
 
-# 部分	例子	                               Django 是否关心？
+# 部分	例子	                                  Django 是否关心？
 # 协议	http:// 或 https://	                   ❌ 不关心（由 Web 服务器处理）
-# 主机	127.0.0.1 或 example.com	           ❌ 不关心（由 Web 服务器处理）
-# 端口	:8000	                               ❌ 不关心（由 Web 服务器处理）
-# 路径	/admin/auth/user/	                   ✅ 这是 Django 路由系统处理的部分
+# 主机	127.0.0.1 或 example.com	             ❌ 不关心（由 Web 服务器处理）
+# 端口	:8000	                                 ❌ 不关心（由 Web 服务器处理）
+# 路径	/admin/auth/user/	                     ✅ 这是 Django 路由系统处理的部分
 # 参数	?page=2	                               ✅ 由视图函数通过 request.GET 获取
-# 锚点	#section1	                           ❌ 浏览器内部使用，不发送到服务器
+# 锚点	#section1	                             ❌ 浏览器内部使用，不发送到服务器
 
 
 # 制作视图view:
@@ -449,6 +451,7 @@ def index(request):
 # render() 的作用是：把“模板（HTML 文件）”和“数据（字典）”合并，生成一个完整的 HTML 页面，然后打包成 HTTP 响应返回给浏览器。
 
 # request 不是你自己定义的，而是 Django 在接收到用户请求时“自动创建”的，然后作为参数传入你的视图函数。
+
 # 1. 用户在浏览器输入 URL: http://127.0.0.1:8000/
 #                         ↓
 # 2. 浏览器发送 HTTP 请求到 Django 服务器
@@ -469,7 +472,6 @@ def index(request):
 
 # *****************************逻辑归纳：*********************************
 """
-
 ### 我们现在只讨论一个具体问题（你卡住的地方）：
 
 > **“为了把数据库里的数据变成网页上的链接，为什么必须经过 url 模式、视图、模板这三样东西？”**
@@ -478,15 +480,12 @@ def index(request):
 - 这是用户在浏览器地址栏里敲的。
 - 浏览器说：“我要访问这个地址”。
 
-
 #### 2. Django 收到这个地址后，第一件事是去 `urls.py` 里查找
 - `urls.py` 是一个**列表**，里面一条一条写清楚了：
   - 如果用户访问的是 `topics/`，就去找 `views.topics` 这个函数。
   - 如果用户访问的是 `admin/`，就去找管理员后台。
 - 这一步叫做 **“路由匹配”**。
 - **作用**：就像一张地图，告诉 Django：“用户要去哪个地方，你该找谁带路”。
-
----
 
 #### 3. 找到 `views.topics` 这个函数后，Django 执行它
 - 这个函数写在 `views.py` 里。
@@ -497,8 +496,6 @@ def index(request):
 - 函数最后说：`return render(request, 'topics.html', context)`
   - 意思是：“把数据（context）送去 `topics.html` 这个模板，让模板去显示”。
 
----
-
 #### 4. Django 收到 `render` 指令后，去打开 `topics.html` 文件
 - `topics.html` 是一个**混合文件**：
   - 里面有 **HTML 标签**（比如 `<ul>`、`<li>`），用来控制网页的样子。
@@ -507,31 +504,23 @@ def index(request):
   - 比如 `context` 里有三条主题：python、chess、rock climbing。
   - 模板里的 `{% for topic in topics %}` 会循环三次，每次生成一个 `<li>` 列表项。
 
----
-
 #### 5. Django 把填好数据的完整 HTML 返回给浏览器
 - 浏览器收到这个 HTML，把它画成你看到的网页。
 - 网页上显示的是：
-  ```
   • python
   • chess
   • rock climbing
-  ```
-
----
 
 #### 6. 那么“可点击的链接”是怎么来的？
 - 你不想让用户只看文字，你还想让他们**点一下标题，就跳转到详细页面**。
 - 所以在 `topics.html` 里，你写的是：
-  ```html
   <a href="{% url 'learning_logs:topic' topic.id %}">{{ topic.text }}</a>
-  ```
+
 - 这句话的意思：
   - `<a href="...">` 是 HTML 里的链接标签。
   - `{% url ... %}` 是 Django 的**反向解析**，它会自动根据 `topic.id` 生成正确的网址，比如 `/topics/1/`。
-- 用户点击后，浏览器会访问 `/topics/1/`，然后 Django 又重新走一遍 **第 1 步到第 5 步**，只是这次调用的视图函数是 `views.topic`，它会显示单个主题的详细条目。
-
----
+- 用户点击后，浏览器会访问 `/topics/1/`，
+然后 Django 又重新走一遍 **第 1 步到第 5 步**，只是这次调用的视图函数是 `views.topic`，它会显示单个主题的详细条目。
 
 ### 你现在需要记住的核心（只有三句）：
 
@@ -541,8 +530,6 @@ def index(request):
 
 这三件事，**缺一不可**，也**不能调换顺序**。
 
----
-
 ### 你现在不需要记住的（以后再说）：
 
 - `{% for %}` 的具体写法
@@ -551,14 +538,12 @@ def index(request):
 
 这些是细节，不是逻辑。**逻辑清楚之后，细节是可以查的。**
 
-
 很好。你这句话，说明你已经抓住了学习编程最核心的东西：**先通逻辑，再填细节。**
 
-既然你不想被标签语法分散注意力，那我接下来就继续**纯逻辑**往下走。你现在已经掌握了“用户点链接 -> Django 找路由 -> 视图拿数据 -> 模板填数据 -> 页面返回”这条主线，这是一个非常扎实的根基。
+既然你不想被标签语法分散注意力，那我接下来就继续**纯逻辑**往下走。
+你现在已经掌握了“用户点链接 -> Django 找路由 -> 视图拿数据 -> 模板填数据 -> 页面返回”这条主线，这是一个非常扎实的根基。
 
 现在，我们要往这条主线上加一块**新的拼图**，它同样不涉及任何新标签，只涉及逻辑。
-
----
 
 ### 新的问题：一个页面怎么“带参数”？
 
@@ -572,16 +557,11 @@ def index(request):
 - 如果用户点击的是“Chess”，页面就要显示 Chess 的条目。
 
 **问题来了：** 服务器怎么能知道用户点击的是哪个主题呢？
-
----
-
 ### 解决方案：URL 里带编号
 
 我们在 `urls.py` 里，不是写死一个固定的路径，而是写一个**带变量的路径模板**：
 
-```
 topics/<int:topic_id>/
-```
 
 这句话的逻辑是：
 - 如果用户访问 `topics/1/`，`topic_id` 就等于 `1`。
@@ -589,25 +569,18 @@ topics/<int:topic_id>/
 
 这个 `topic_id` 是**从 URL 里提取出来的**，它不是用户填的表单，也不是隐藏的数据，就是**明明白白写在地址栏里的数字**。
 
----
-
 ### 这个编号怎么用？
 
 在 `views.py` 里，对应的视图函数会接收这个 `topic_id` 作为参数：
-
-```python
 def topic(request, topic_id):
     # 从数据库里找到编号等于 topic_id 的那个主题
     # 然后取出它的所有条目
     # 最后把这些数据交给模板
-```
 
 你可以理解为：
 - 用户点了一个链接，这个链接**自带一个编号**。
 - Django 把编号提取出来，交给视图。
 - 视图拿着这个编号去数据库里精确查找对应的数据。
-
----
 
 ### 那链接是谁生成的？
 
@@ -615,13 +588,11 @@ def topic(request, topic_id):
 
 在显示所有主题的页面（`topics.html`）里，你写了一个循环：
 
-```html
 {% for topic in topics %}
     <a href=".../topics/{{ topic.id }}/">
         {{ topic.text }}
     </a>
 {% endfor %}
-```
 
 这个循环的意思很简单：
 - 每一条主题，生成一个链接。
@@ -634,24 +605,20 @@ def topic(request, topic_id):
 3. Django 从 URL 里提取 `id`，交给视图。
 4. 视图用 `id` 去数据库查找，返回对应的数据。
 
----
-
 ### 现在你头脑里应该有的画面
 
 你不需要记住任何代码，只需要记住这个流程：
 
-| 步骤 | 做什么 | 谁来做 |
+| 步骤 | 做什么                                   | 谁来做 |
 |------|--------|--------|
-| 1 | 用户看到一个主题列表 | 浏览器展示 |
-| 2 | 点击某个主题，生成带 `id` 的链接 | 模板生成 |
-| 3 | 浏览器请求这个带 `id` 的链接 | 浏览器发起 |
-| 4 | Django 从 URL 里取出 `id` | `urls.py` 的路径转换器 |
-| 5 | 视图用 `id` 查找数据库 | `views.py` 里的函数 |
-| 6 | 数据传给模板显示 | 模板渲染 |
+| 1 | 用户看到一个主题列表                        | 浏览器展示 |
+| 2 | 点击某个主题，生成带 `id` 的链接            | 模板生成 |
+| 3 | 浏览器请求这个带 `id` 的链接                | 浏览器发起 |
+| 4 | Django 从 URL 里取出 `id`                   | `urls.py` 的路径转换器 |
+| 5 | 视图用 `id` 查找数据库                      | `views.py` 里的函数 |
+| 6 | 数据传给模板显示                            | 模板渲染 |
 
 这就是 **“动态页面”** 的逻辑本质：**URL 里带参数，服务器根据参数返回不同的内容。**
-
----
 
 ### 你现在已经掌握的逻辑链条
 
@@ -659,8 +626,6 @@ def topic(request, topic_id):
 2. **动态页面**：`/topics/1/` → 显示编号为 1 的主题的条目。
 
 两者的区别，仅仅在于 URL 里有没有一个可以变化的编号。
-
----
 
 ### 如果你还没有完全消化
 
@@ -703,8 +668,6 @@ templates 的中文翻译是：模板
 templates 是 Django 项目里的一个文件夹名称，它专门用来存放 HTML 文件。
 这里有 topics.html、topic.html、new_topic.html。
 路径必须是 templates/learning_logs/，不能多一层也不能少一层。
-
-
 
 
 具体执行阶段：
@@ -779,52 +742,39 @@ Django 处理 URL 路由是“两级跳”：
 1. 你在浏览器输入 `http://127.0.0.1:8000/new_topic/`。
 2. 你的电脑向 Django 服务器（运行在 8000 端口）发出请求：“我要访问 `/new_topic/` 这个页面”。
 3. Django 服务器收到这个请求。
-
 **此时，你的电脑和服务器之间的“对话”已经建立，但 Django 还不知道你要看什么内容。**
 
----
-
 ### 二、Django 的第一步：去项目根路由 `ll_project/urls.py` 里找“门牌号”
-
 Django 把请求中的路径部分（`/new_topic/`）拿出来，开始匹配：
 
 1. 它先看项目根 `urls.py` 里有哪些路径模板：
    - 第一条：`path('admin/', admin.site.urls)` —— 但你现在访问的是 `new_topic/`，不匹配。
-   - 第二条：`path('', include('learning_logs.urls'))` —— 这是个“空路径前缀”，它表示：“**以空字符串开头**的 URL，都请交给 `learning_logs.urls` 去继续匹配。”
-
+   - 第二条：`path('', include('learning_logs.urls'))` —— 这是个“空路径前缀”，
+   它表示：“**以空字符串开头**的 URL，都请交给 `learning_logs.urls` 去继续匹配。”
 因为所有 URL 都是以空字符串开头的，所以这个匹配一定会命中。
 
-**这一步的本质：** Django 在项目层把请求**分流**给了 `learning_logs` 这个 app。它还没决定显示哪个页面，只是确定了“这事归哪个 app 管”。
-
----
+**这一步的本质：** Django 在项目层把请求**分流**给了 `learning_logs` 这个 app。
+它还没决定显示哪个页面，只是确定了“这事归哪个 app 管”。
 
 ### 三、Django 的第二步：去 app 的 `learning_logs/urls.py` 里看“房间号”
-
 Django 拿着剩余的路径（仍然是 `/new_topic/`），去 app 的 `urls.py` 里继续匹配：
-
 - 第一条：`path('topics/', views.topics, name='topics')` —— 访问的是 `new_topic/`，不匹配。
 - 第二条：`path('topics/<int:topic_id>/', views.topic, name='topic')` —— 也不匹配。
 - 第三条：`path('new_topic/', views.new_topic, name='new_topic')` —— **匹配成功！**
 
 Django 现在知道了：**要执行 `views.new_topic` 这个函数。**
-
 **这一步的本质：** Django 通过 `urls.py` 里的匹配，找到了**应该调用哪个视图函数**。这是整个路由过程的终点，也是视图执行过程的起点。
 
----
-
 ### 四、Django 的第三步：执行视图函数（`views.new_topic`）
-
 Django 调用 `views.py` 里的 `new_topic` 函数，并把请求对象 `request` 传给它。
 
 这个函数内部会做两件事（或者其中之一）：
 1. **如果是 GET 请求（用户第一次打开页面）**：直接创建表单实例，准备展示空表单。
 2. **如果是 POST 请求（用户提交了表单）**：验证数据，保存到数据库，然后重定向到其他页面。
 函数最终会返回一个 `render()` 或 `redirect()` 的结果。
-
 **这一步的本质：** 视图函数是“业务逻辑的核心”。它决定**取什么数据、做什么操作、最终返回什么给用户**。
 
 ### 五、Django 的第四步：渲染模板（如果返回的是 `render`）
-
 如果视图函数执行了 `return render(request, 'learning_logs/new_topic.html', context)`，Django 会：
 
 1. 去 `templates/learning_logs/` 目录下找到 `new_topic.html` 文件。
@@ -834,7 +784,6 @@ Django 调用 `views.py` 里的 `new_topic` 函数，并把请求对象 `request
 **这一步的本质：** 把数据“嵌入”到静态页面模板中，生成用户最终看到的网页。
 
 ### 六、回到你最初的问题：为什么你不能省略 `new_topic.html`？
-
 因为**视图函数需要有一个“展示层”来呈现表单**。
 
 - 如果你在视图里直接返回字符串，用户看到的只是纯文本，而不是一个可填写的表单页面。
@@ -844,17 +793,13 @@ Django 调用 `views.py` 里的 `new_topic` 函数，并把请求对象 `request
 
 
 ### 七、你现在拥有的完整导航图
-
-| 步骤 | 地点 | 发生的事 |
-|------|------|----------|
-| 1 | 浏览器 | 用户输入 URL，发起请求 |
-| 2 | **项目 `urls.py`** | 路由分流，确定由哪个 app 处理 |
-| 3 | **app 的 `urls.py`** | 路由匹配，找到对应的视图函数 |
-| 4 | `views.py` | 执行视图函数，处理请求与数据 |
-| 5 | `templates/*.html` | 渲染模板，将数据嵌入页面 |
-| 6 | 浏览器 | 显示最终页面 |
-
----
+| 步骤 | 地点                          | 发生的事 |
+| 1 | 浏览器                           | 用户输入 URL，发起请求 |
+| 2 | **项目 `urls.py`**               | 路由分流，确定由哪个 app 处理 |
+| 3 | **app 的 `urls.py`**             | 路由匹配，找到对应的视图函数 |
+| 4 | `views.py`                       | 执行视图函数，处理请求与数据 |
+| 5 | `templates/*.html`               | 渲染模板，将数据嵌入页面 |
+| 6 | 浏览器                           | 显示最终页面 |
 
 ### 八、最后一句
 > **“逻辑不通，背代码没有意义” —— 这句话本身就是最好的学习方法。**
